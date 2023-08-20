@@ -18,8 +18,8 @@
     <?php
         /* Pega os valores dos inputs */
         if (isset($_REQUEST['valor']) && isset($_REQUEST['moeda'])) {
-            $valor = floatval($_REQUEST['valor']);
-            $moeda = $_REQUEST['moeda'];
+            $valor = floatval($_REQUEST['valor']) ?? 10;
+            $moeda = $_REQUEST['moeda'] ?? 10;
             /* URL API */
             /* Euro */
             $url1 = 'https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaPeriodo(moeda=@moeda,dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?@moeda=\'EUR\'&@dataInicial=\'08-13-2023\'&@dataFinalCotacao=\'08-20-2023\'&$top=1&$orderby=dataHoraCotacao%20desc&$format=json&$select=cotacaoCompra,cotacaoVenda,dataHoraCotacao';
@@ -46,7 +46,7 @@
             <h1 class="text-white bg-dark rounded-1 p-1 text-center">Convertor de moedas</h1>
             <form action="<?=$_SERVER['PHP_SELF']?>" method="get" class="w-100 d-flex justify-content-evenly">
                 <label for="valor">Valor em R$:</label>
-                <input type="number" name="valor" id="ivalor" class="ms-1 w-40" step="0.010">
+                <input type="number" name="valor" id="ivalor" class="ms-1 w-40" step="0.010" placeholder="R$">
 
                 <label for="moeda">Moeda:</label>
                 <select name="moeda" id="imoeda" class="ms-1 w-25">
@@ -62,9 +62,13 @@
 <div class=" d-flex justify-content-center">
     <section class="bg-light w-50 rounded-1 text-center p-5 fs-5">
         
-            <?php
-                echo "$valor Reais convertido para $moeda é igual a " .number_format($resultado, 0, ",", ".");
-            ?>
+        <?php
+        if ($valor !== 0 && $moeda !== 0 && $resultado !== 0) {
+            echo $valor . " Reais convertido para " . $moeda . " é igual a " . number_format($resultado, 0, ",", ".");
+        } else {
+            echo "Insira um valor e escolha uma moeda para calcular a conversão.";
+        }
+        ?>"
 
     </section>
 </div>
